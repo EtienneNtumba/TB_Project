@@ -1,0 +1,101 @@
+rule all:
+	input:
+		RES = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/results',
+		out1 = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/output_files.txt',
+		out2 = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/outputFile_sort.txt'
+rule Test:
+	input:
+		datadir = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina'		
+	output:
+		sampl = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/samples.txt'
+	shell:
+		"""
+		#!/bin/bash
+
+		find '{input.datadir}' -type f -name "*.fastq.gz" | while read -r file
+		do
+		# Extraire les informations nécessaires
+		prefix=$(basename "$file" | awk -F'_R' '{{print $1}}')
+		folder=$(dirname "$file")
+		path_1="$folder/${{prefix}}_R1_001.fastq.gz"
+		path_2="$folder/${{prefix}}_R2_001.fastq.gz"
+
+		# Écrire les informations dans le fichier de sortie
+		echo -e "$prefix,$path_1,$path_2,$folder" >> 'SM.txt'
+		done
+		
+		sort 'SM.txt' | uniq > '{output.sampl}'
+
+		rm 'SM.txt'
+		"""
+
+rule pipelines:
+	input:
+		sampl = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/samples.txt'		
+	output:
+		RES = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/results'
+	shell:
+		"""
+		#!/bin/bash
+
+		# Specify the CSV file
+
+		# Read the file line by line and process each line
+		mkdir -p '{output.RES}'
+
+		cat '{input.sampl}' | while IFS=, read -r col1 col2 col3 col4 
+		do
+		   tb-profiler profile -1 $col2 -2 $col3 --prefix $col1 --txt --dir '{output.RES}'
+		done
+
+		"""
+rule vcfMasked:
+	input:
+		REK = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/results',
+		ref = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/references_files.txt'		
+	output:
+		out1 = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/output_files.txt',
+		out2 = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/outputFile_sort.txt',
+		out3 = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/Out2/outputFile_s.txt'
+	shell:
+		"""
+
+		#RT = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/outputFile_sort.txt',
+		#ST = '/home/p0129674/Data_Analysis/Outbreat1/Outbreak1-Africanum_L5/Illumina/SnakeMake/outputFile_s.txt'
+                # Generate an intermediate file with lineage results
+
+		for filename in $(find "${input.REK}" -name "*.results.txt");do
+			result=$(cat "$filename" | tr " " "\\n" | sort | uniq | grep 'lineage' | awk '{{print $1}}' | awk -F'.' '{{print $1}}' | uniq)
+			echo -e "$filename\\t$result" >> '{output.out1}'
+		done
+
+        # Define the input and output files
+		file1='{input.ref}'
+		file2='{output.out1}'
+		outputFile='{output.out2}'
+
+
+        # Prepare outputFile
+		echo -n "" > "$outputFile"  # This clears the outputFile before writing to it
+        # Read each line of file1
+		while IFS= read -r line1; do
+                        col1_file1=$(echo "$line1" | awk '{{print $1}}')  # Extract the first column lineage from file1
+                        col3_file1=$(echo "$line1" | awk '{{print $3}}')  # Extract the third column ref genome from file1
+                        col4_file1=$(echo "$line1" | awk '{{print $4}}')  # Extract the third column ref mask from file1
+            # Search for a matching line in file2
+                        while IFS= read -r line2; do
+                                col1_file2=$(echo "$line2" | awk '{{print $1}}')  # Extract the first column from file2
+                                col2_file2=$(echo "$line2" | awk '{{print $2}}')  # Extract the second column from file2
+                                col4_file2=$(echo "$line2" | awk -F'/' '{{print $NF}}' | awk -F'.' '{{print $1}}')
+#
+                # Check if the columns match
+                                if [ "$col1_file1" = "$col2_file2" ]; then
+                                        # Print th      e result into outputFile
+                                        echo -e "$col1_file1\\t$col3_file1\\t$col1_file2\\t$col4_file2" >> "$outputFile"
+                                fi
+                        done < "$file2"
+                done < "$file1"
+                sort -k3,3 "$outputFile" | awk '!seen[$3]++' | awk '{{print $1"\\t"$2"\\t"$3"\\t"$4}}' > '{output.out3}'
+
+		"""
+
