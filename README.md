@@ -88,3 +88,7 @@ The test dataset contains 348 normal samples and 345 tuberculosis samples.
     <td class="tg-c3ow">0.42</td>
   </tr>
 </table></div>
+
+## Analysis
+
+[Etienne Ntumba](https://github.com/EtienneNtumba) - Project Lead
