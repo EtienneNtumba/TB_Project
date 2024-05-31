@@ -1,9 +1,5 @@
 # Deep Learning for Tuberculosis #
 
-<p align="center">
-	<img src="assets/tbnet_logo.png" alt="TuberculosisNet Logo" width="25%" height="25%">
-	<br>
-</p>
 
 **Note: The TB-Net model provided here is intended to be used as a reference model that can be built upon and enhanced as new data becomes available. It is currently at a research stage and not yet intended as a production-ready model (not meant for direct clinical diagnosis). We are working continuously to improve it as new data becomes available. Please do not use TB-Net for self-diagnosis; seek help from your local health authorities.**
 
