@@ -9,14 +9,28 @@
 	<em>Example chest x-ray images from 3 different patients, and their associated critical factors (highlighted in white) as identified by GSInquire. In this example, all three lungs have been diagnosed with tuberculosis.</em>
 </p>
 
-Tuberculosis (TB) remains a global health problem, and is the leading cause of death from an infectious disease. A crucial step in the treatment of tuberculosis is screening high risk populations and the early detection of the disease, with chest x-ray (CXR) imaging being the most widely-used imaging modality. As such, there has been significant recent interest in artificial intelligence-based TB screening solutions for use in resource-limited scenarios where there is a lack of trained healthcare workers with expertise in CXR interpretation. Motivated by this pressing need, we introduce TB-Net, a self-attention deep convolutional neural network tailored for TB case screening. More specifically, we leveraged machine-driven design exploration to build a highly customized deep neural network architecture with attention condensers. We conducted an explainability-driven performance validation process to validate TB-Net's decision-making behaviour. Experiments using the Tuberculosis Chest X-Ray benchmark dataset showed that the proposed TB-Net is able to achieve accuracy/sensitivity/specificity of 99.86%/100.0%/99.71%. Radiologist validation was conducted on select cases by two board-certified radiologists with over 10 and 19 years of experience, respectively, and showed consistency between radiologist interpretation and critical factors leveraged by TB-Net for TB case detection.  While not a production-ready solution, We hope that the release of TB-Net will support researchers, clinicians, and citizen data scientists in advancing this field.
 
-The World Health Organization (WHO) recently introduced a new recommendation that, for those aged 15 years and older in populations in which TB screening is recommended, computer-aided detection (CAD) approaches may be used in place of human readers for interpreting digital chest X-rays for screening and triaging TB.
+## Introduction ##
 
+Tuberculosis (TB) remains a significant global health challenge and is the leading cause of death from an infectious disease. Early detection through screening high-risk populations is crucial for effective treatment, and chest X-ray (CXR) imaging is the most widely-used diagnostic tool. To address the shortage of trained healthcare workers in resource-limited settings, there has been growing interest in AI-based TB screening solutions.
+TB-Net: An AI-Based Screening Solution
 
-If there are any technical questions after the README, FAQ, and past/current issues have been read, please post an issue or contact:
+Motivated by the urgent need for improved TB detection, we introduce TB-Net, a self-attention deep convolutional neural network designed specifically for TB case screening. TB-Net utilizes machine-driven design exploration to develop a highly customized deep neural network architecture with attention condensers. This model has undergone explainability-driven performance validation to ensure its decision-making process is transparent and reliable.
 
-* etienne.ntumba.kabongo@umontreal.ca
+## Performance and Validation ##
+
+Experiments conducted using the Tuberculosis Chest X-Ray benchmark dataset demonstrate that TB-Net achieves outstanding performance with accuracy, sensitivity, and specificity rates of 99.86%, 100.0%, and 99.71%, respectively. Validation by two board-certified radiologists, with over 10 and 19 years of experience, confirmed consistency between their interpretations and the critical factors identified by TB-Net for TB case detection.
+
+## Important Note ##
+
+The TB-Net model provided here is intended as a reference model for further development and enhancement as new data becomes available. It is currently at a research stage and not intended for production use or direct clinical diagnosis. Continuous improvements are being made as more data becomes available. Please do not use TB-Net for self-diagnosis; always seek assistance from your local health authorities.
+Example Use Case
+
+The image below shows chest X-rays from three different patients, each diagnosed with TB. Critical factors identified by TB-Net (highlighted in white) illustrate the model's interpretative capability for root cause analysis of TB in sample images.
+
+## WHO Recommendation ##
+
+The World Health Organization (WHO) recently recommended that for individuals aged 15 years and older in populations where TB screening is advised, computer-aided detection (CAD) approaches may replace human readers for interpreting digital chest X-rays for TB screening and triage.
 
 
 ## Table of Contents ##
